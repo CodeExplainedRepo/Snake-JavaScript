@@ -75,22 +75,22 @@ function draw() {
     // change direction
     let change = false;
 
-    if (snakeX < box) {
+    if (snakeX < 2 * box) {
         box_x *= -1;
         score += 5;
         change = true;
     }
-    if (snakeX > 17 * box) {
+    if (snakeX > 16 * box) {
         box_x *= -1;
         score += 5;
         change = true;
     }
-    if (snakeY < 3 * box) {
+    if (snakeY < 4 * box) {
         box_y *= -1;
         score += 5;
         change = true;
     }
-    if (snakeY > 17 * box) {
+    if (snakeY > 16 * box) {
         box_y *= -1;
         score += 5;
         change = true;

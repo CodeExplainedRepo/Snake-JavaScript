@@ -115,10 +115,10 @@ function draw() {
 
     // change direction
 
-    if (snakeX < box) box_x *= -1;
-    if (snakeX > 17 * box) box_x *= -1;
-    if (snakeY < 3 * box) box_y *= -1;
-    if (snakeY > 17 * box) box_y *= -1;
+    if (snakeX < 2 * box) box_x *= -1;
+    if (snakeX > 16 * box) box_x *= -1;
+    if (snakeY < 4 * box) box_y *= -1;
+    if (snakeY > 16 * box) box_y *= -1;
 
     // if the snake eats the food
     if (Eat_Food(food, snake)) {
