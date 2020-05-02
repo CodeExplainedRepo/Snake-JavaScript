@@ -52,6 +52,9 @@ let food = {
 // create the score var
 
 let score = 0;
+let secondScore = 0;
+let thirdScore = 0;
+let finalSccore = 0;
 
 //control the snake
 
@@ -76,15 +79,7 @@ function direction(event) {
     }
 }
 
-// cheack collision function
-function collision(head, array) {
-    for (let i = 0; i < array.length; i++) {
-        if (head.x == array[i].x && head.y == array[i].y) {
-            return true;
-        }
-    }
-    return false;
-}
+
 
 // draw everything to the canvas
 
@@ -109,6 +104,7 @@ function draw() {
         ctx.strokeRect(snake[i].x, snake[i].y, box, box);
     }
 
+
     ctx.drawImage(foodImg, food.x, food.y);
 
     // old head position
@@ -121,15 +117,37 @@ function draw() {
     if (d == "RIGHT") snakeX += box;
     if (d == "DOWN") snakeY += box;
 
+    // collision with barriers part 1 
+    function collision1(snakeX, snakeY) {
+        if ((snakeX == 5 * box && snakeY == 6 * box) || (snakeX == 6 * box && snakeY == 6 * box) || (snakeX == 5 * box && snakeY == 7 * box) || (snakeX == 5 * box && snakeY == 8 * box) || (snakeX == 13 * box && snakeY == 12 * box) || (snakeX == 13 * box && snakeY == 13 * box) || (snakeX == 13 * box && snakeY == 14 * box) || (snakeX == 12 * box && snakeY == 14 * box)) {
+            return true;
+        } else { return false; }
+    }
+    // collision with barriers part 2 
+    function collision2(snakeX, snakeY) {
+        if ((snakeX == 5 * box && snakeY == 12 * box) || (snakeX == 5 * box && snakeY == 13 * box) || (snakeX == 5 * box && snakeY == 14 * box) || (snakeX == 6 * box && snakeY == 14 * box) || (snakeX == 12 * box && snakeY == 6 * box) || (snakeX == 13 * box && snakeY == 6 * box) || (snakeX == 13 * box && snakeY == 7 * box) || (snakeX == 13 * box && snakeY == 18 * box)) {
+            return true;
+        } else { return false; }
+    }
     // if the snake eats the food
     if (snakeX == food.x && snakeY == food.y) {
         score++;
+        if (score > 3) {
+            secondScore++;
+            if (secondScore > 4) { thirdScore++; }
+        }
         eat.play();
         food = {
+            x: Math.floor(Math.random() * 17 + 1) * box,
+            y: Math.floor(Math.random() * 15 + 3) * box
+        }
+        while (collision1(food.x, food.y) || collision2(food.x, food.y)) {
+            food = {
                 x: Math.floor(Math.random() * 17 + 1) * box,
                 y: Math.floor(Math.random() * 15 + 3) * box
             }
-            // we don't remove the tail
+        }
+        // we don't remove the tail
     } else {
         // remove the tail
         snake.pop();
@@ -143,19 +161,76 @@ function draw() {
     }
 
     // game over
+    function gameOver() {
 
-    if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY > 17 * box || collision(newHead, snake)) {
+        alert("Game Over ! \n\n                 Your Score is : " + score + " / 12");
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Game Over !',
+            footer: 'Powered By KHITER .'
+        })
+
+    }
+
+    if (snakeX < box || snakeX > 17 * box || snakeY < 3 * box || snakeY > 17 * box) {
         clearInterval(game);
         dead.play();
+        gameOver();
+
     }
 
     snake.unshift(newHead);
 
     ctx.fillStyle = "white";
-    ctx.font = "45px Changa one";
-    ctx.fillText(score, 2 * box, 1.6 * box);
+
+
+    if (score > 3) {
+        ctx.fillStyle = "blue";
+        ctx.font = "45px Changa one";
+        ctx.fillText("3/3.", 2 * box, 1.6 * box);
+        ctx.fillStyle = "#16510e"
+        ctx.fillRect(5 * box, 6 * box, box, 3 * box);
+        ctx.fillRect(5 * box, 6 * box, 2 * box, box);
+        ctx.fillRect(12 * box, 14 * box, 2 * box, box);
+        ctx.fillRect(13 * box, 12 * box, box, 3 * box);
+        if (collision1(snakeX, snakeY)) {
+            clearInterval(game);
+            dead.play();
+            gameOver();
+
+        }
+        if (secondScore > 4) {
+            ctx.fillStyle = "red";
+            ctx.font = "45px Changa one";
+            ctx.fillText("3/3.", 2 * box, 1.6 * box);
+            ctx.fillText("4/4.", 7 * box, 1.6 * box);
+            ctx.fillText(thirdScore + "/5.", 11 * box, 1.6 * box);
+            ctx.fillStyle = "#16510e"
+            ctx.fillRect(12 * box, 6 * box, 2 * box, box);
+            ctx.fillRect(13 * box, 6 * box, box, 3 * box);
+            ctx.fillRect(5 * box, 12 * box, box, 3 * box);
+            ctx.fillRect(5 * box, 14 * box, 2 * box, box);
+            if (collision1(snakeX, snakeY) || collision2(snakeX, snakeY)) {
+                clearInterval(game);
+                gameOver();
+                dead.play();
+            }
+        }
+        if (secondScore <= 4) {
+            ctx.fillStyle = "blue";
+            ctx.fillText(secondScore + "/4.", 7 * box, 1.6 * box);
+        }
+
+    } else {
+        ctx.font = "45px Changa one";
+        ctx.fillText(score + "/3.", 2 * box, 1.6 * box);
+    }
+
+
+
 }
 
 // call draw function every 100 ms
 
-let game = setInterval(draw, 100);
+let game = setInterval(draw, 200);
