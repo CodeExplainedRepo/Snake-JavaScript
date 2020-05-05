@@ -1,22 +1,14 @@
-/*
-Create by Learn Web Developement
-Youtube channel : https://www.youtube.com/channel/UC8n8ftV94ZU_DJLOLtrpORA
-*/
-
-const cvs = document.getElementById("snake");
+const cvs =document.getElementById("snake");
 const ctx = cvs.getContext("2d");
 
-// create the unit
+//unit to use for canvas: 32 pixels
 const box = 32;
 
-// load images
-
 const ground = new Image();
-ground.src = "img/ground.png";
+ground.src="img/ground.png";
 
 const foodImg = new Image();
 foodImg.src = "img/food.png";
-
 // load audio files
 
 let dead = new Audio();
@@ -34,12 +26,15 @@ left.src = "audio/left.mp3";
 down.src = "audio/down.mp3";
 
 // create the snake
+// snake object will be stored in the array snake
 
 let snake = [];
 
+//snake[0] will be the head of the snake
+
 snake[0] = {
-    x : 9 * box,
-    y : 10 * box
+    x: 9*box,
+    y: 10*box
 };
 
 // create the food
@@ -53,9 +48,9 @@ let food = {
 
 let score = 0;
 
-//control the snake
+//EventListener for the keys
 
-let d;
+let d; 
 
 document.addEventListener("keydown",direction);
 
@@ -76,9 +71,10 @@ function direction(event){
     }
 }
 
-// cheack collision function
-function collision(head,array){
-    for(let i = 0; i < array.length; i++){
+//collision detection
+
+function collision(head, array){
+    for(let i=0; i< array.length; i++){
         if(head.x == array[i].x && head.y == array[i].y){
             return true;
         }
@@ -86,15 +82,14 @@ function collision(head,array){
     return false;
 }
 
-// draw everything to the canvas
-
 function draw(){
     
     ctx.drawImage(ground,0,0);
     
     for( let i = 0; i < snake.length ; i++){
-        ctx.fillStyle = ( i == 0 )? "green" : "white";
-        ctx.fillRect(snake[i].x,snake[i].y,box,box);
+       // ctx.fillStyle = ( i == 0 )? "black" : "white";
+       ctx.fillStyle = (getSnakeColor(i));
+       ctx.fillRect(snake[i].x,snake[i].y,box,box);
         
         ctx.strokeStyle = "red";
         ctx.strokeRect(snake[i].x,snake[i].y,box,box);
@@ -125,7 +120,6 @@ function draw(){
         // remove the tail
         snake.pop();
     }
-    
     // add new Head
     
     let newHead = {
@@ -148,23 +142,26 @@ function draw(){
 }
 
 // call draw function every 100 ms
+let game = setInterval(draw,150);
 
-let game = setInterval(draw,100);
+//random color generator for body of snake
+function getSnakeColor(number)
+{
+    //going to make it a correl snake
+    //head is black, yellow, black, red, yellow, red
+    //take care of the head which is always black
+    if (number === 0)
+    return "black";
+    //we also know that every odd number is always yellow
+    if (number%2 != 0)
+    return "yellow";
+    //we know every even one is going to be either red or black but it depends on 
+    //whether it's a multiple of 4 or 2
+    if(number%4 === 0)
+    return "red";
+
+    if (number%2 ===0)
+    return "black";
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
