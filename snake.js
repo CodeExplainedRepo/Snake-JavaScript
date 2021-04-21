@@ -116,9 +116,11 @@ function draw(){
     if(snakeX == food.x && snakeY == food.y){
         score++;
         eat.play();
-        food = {
-            x : Math.floor(Math.random()*17+1) * box,
-            y : Math.floor(Math.random()*15+3) * box
+        while(snakeX != food.x && snakeY != food.y){
+            food = {
+                x : Math.floor(Math.random()*17+1) * box,
+                y : Math.floor(Math.random()*15+3) * box
+            }
         }
         // we don't remove the tail
     }else{
